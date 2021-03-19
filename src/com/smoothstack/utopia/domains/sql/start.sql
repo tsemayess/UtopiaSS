@@ -1,0 +1,48 @@
+use utopia;
+insert into airport values("ATL", "Atlanta, GA,USA");
+insert into airport values("NYC", "New York City, NY, USA");
+insert into airport values ("MIA", "Miami, FL, USA");
+insert into airport values("ORD", "Chicago, IL, USA");
+update airport set iata_id ="JFK" where iata_id = "NYC"; 
+update airport set city ="Atlanta, GA, USA" where iata_id = "ATL"; 
+insert into airport values("SFO", "San Francisco, CA, USA");
+insert into airport values("BOS", "Boston, MA, USA");
+insert into airport values("SEA", "Seattle, WA, USA");
+insert into airport values("IAH", "Houston, TX, USA");
+insert into airport values("HNL","Honolulu, HI, USA");
+select * from airport;
+
+insert into route (origin_id, destination_id) values ("ATL", "JFK");
+insert into route (origin_id, destination_id) values ("ATL", "LAX");
+insert into route (origin_id, destination_id) values ("ATL", "MIA");
+insert into route (origin_id, destination_id) values ("JFK", "SFO");
+insert into route (origin_id, destination_id) values ("JFK", "HNL");
+insert into route (origin_id, destination_id) values ("JFK", "SEA");
+insert into route (origin_id, destination_id) values ("BOS", "IAH");
+insert into route (origin_id, destination_id) values ("BOS", "HNL");
+insert into route (origin_id, destination_id) values ("BOS", "ORD");
+insert into route (origin_id, destination_id) values ("ORD", "ATL");
+insert into route (origin_id, destination_id) values ("ORD", "IAH");
+insert into route (origin_id, destination_id) values ("ORD", "LAX");
+insert into route (origin_id, destination_id) values ("LAX", "SFO");
+select * from route;
+
+insert into airplane_type values (0122737700, 149); 
+insert into airplane_type values (0122737800, 189); 
+insert into airplane_type values (0122737900, 220); 
+insert into airplane_type values (0122777200, 317);
+insert into airplane_type values (0122777300, 317);
+insert into airplane_type values (0122787800, 248); 
+insert into airplane_type values (0122787900, 296);
+insert into airplane_type values (0122787100, 336);   
+select * from airplane_type;
+
+insert into airplane(type_id) values (0122737700);
+insert into airplane(type_id) values (0122737700);
+insert into airplane(type_id) values (0122737700);
+insert into airplane(type_id) values (0122737700);
+insert into airplane(type_id) values (0122737800);
+insert into airplane(type_id) values (0122737800);
+insert into airplane(type_id) values (0122737900);
+insert into airplane(type_id) values (0122737900);
+select * from airplane;

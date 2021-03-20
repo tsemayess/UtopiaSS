@@ -13,11 +13,8 @@ public class UserRole {
 	 * @param iD the iD to set
 	 * @throws Exception 
 	 */
-	public void setiD(int iD) throws Exception {
-		
-		if (iD > 3 || iD < 1) {
-			throw new Exception();
-		} 
+	public void setiD(int iD) {
+		 
 		
 		this.iD = iD;
 		switch(iD) {

@@ -1,8 +1,7 @@
 package com.smoothstack.utopia.domains;
 
 public class User {
-	private Integer iD;
-	private UserRole role;
+	private Integer iD, role;
 	private StringBuffer firstName, lastName, username, email, password, phone;
 	/**
 	 * @return the iD
@@ -19,14 +18,14 @@ public class User {
 	/**
 	 * @return the role
 	 */
-	public UserRole getRole() {
+	public int getRole() {
 		return role;
 	}
 	/**
-	 * @param role the role to set
+	 * @param string the role to set
 	 */
-	public void setRole(UserRole role) {
-		this.role = role;
+	public void setRole(int id) {
+		this.role = id;
 	}
 	/**
 	 * @return the firstName

@@ -34,6 +34,9 @@ public class AirplaneDAO extends DAO<Airplane> {
 		return super.listAll("select * from airplane", new Object[] {});
 	}
 
+	public Airplane getById(int id) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from airplane where id = ?", new Object[] {id}).get(0);
+	}
 	@Override
 	public List<Airplane> extractList(ResultSet resultSet) throws SQLException {
 		List<Airplane> airplanes = new ArrayList<>();
@@ -41,7 +44,7 @@ public class AirplaneDAO extends DAO<Airplane> {
 		while (resultSet.next()) {
 			Airplane a = new Airplane();
 			a.setAirplaneID(resultSet.getInt("id"));
-			a.setType("type_id");
+			a.setType(resultSet.getInt("type_id"));
 			
 			airplanes.add(a);
 		}
@@ -53,16 +56,17 @@ public class AirplaneDAO extends DAO<Airplane> {
 		return super.read("select * from airplane where id = ?", new Object[] {a.getAirplaneID()});
 	}
 	
+	
 	@Override
 	public String extractString(ResultSet resultSet) throws SQLException {
 		String result = "";
 		while(resultSet.next()) {
-			result += "Plane ID: " + resultSet.getString("id");
+			result += "Plane ID: " + resultSet.getString("id") + "\n";
 			
 			AirplaneTypeDAO typeDAO = new AirplaneTypeDAO(c);
 			AirplaneType type = new AirplaneType();
 			type.setAirplaneID(resultSet.getInt("type_id"));
-			result += "\t" + typeDAO.read(type);
+			result +=  typeDAO.read(type);
 			
 		}
 		return result;

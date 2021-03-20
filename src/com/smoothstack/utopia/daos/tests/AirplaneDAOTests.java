@@ -32,6 +32,11 @@ public class AirplaneDAOTests {
 	}
 	
 	@Test
+	public void getById() throws ClassNotFoundException, SQLException {
+		System.out.println(dao.read(dao.getById(8)));
+	}
+	
+	@Test
 	public void readAllHP() throws ClassNotFoundException, SQLException {
 		List<Airplane> types = dao.listAll();
 		types.forEach(a -> {
@@ -59,7 +64,7 @@ public class AirplaneDAOTests {
 	@Test
 	public void addHP() throws ClassNotFoundException, SQLException {
 		Airplane a = new Airplane();
-		a.setType("122737800");
+		a.setType(122737800);
 		dao.add(a);
 		conn.commit();
 		

@@ -32,6 +32,10 @@ public class AirplaneTypeDAO extends DAO<AirplaneType> {
 		// TODO Auto-generated method stub
 		return super.listAll("select * from airplane_type", new Object[] {});
 	}
+	
+	public AirplaneType getById(int id) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from airplane_type where id = ?", new Object[] {id}).get(0);
+	}
 
 	@Override
 	public List<AirplaneType> extractList(ResultSet resultSet) throws SQLException {

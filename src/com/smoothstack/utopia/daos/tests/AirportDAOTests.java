@@ -75,8 +75,7 @@ public class AirportDAOTests {
 		conn.commit();
 		
 		
-		System.out.println(dao.read(a));
-		
+		System.out.println(dao.read(a));	
 	}
 	
 	@Test

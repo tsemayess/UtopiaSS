@@ -2,19 +2,19 @@ package com.smoothstack.utopia.domains;
 
 public class Airplane {
 	private Integer airplaneID;
-	StringBuffer type;
+	Integer type;
 	
 	/**
 	 * @return the type
 	 */
-	public String getType() {
-		return type.toString();
+	public int getType() {
+		return type;
 	}
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(String type) {
-		this.type = new StringBuffer(type);
+	public void setType(int type) {
+		this.type = type;
 	}
 	public int getAirplaneID() {
 		return airplaneID;

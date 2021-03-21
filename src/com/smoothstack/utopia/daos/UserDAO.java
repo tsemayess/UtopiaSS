@@ -54,7 +54,7 @@ public class UserDAO extends DAO<User> {
 		listAll().forEach(a -> {
 			try {
 				System.out.println(read(a));
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		});
@@ -65,7 +65,7 @@ public class UserDAO extends DAO<User> {
 		listAllEmployees().forEach(a -> {
 			try {
 				System.out.println(read(a));
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		});
@@ -76,7 +76,7 @@ public class UserDAO extends DAO<User> {
 		listAllTravellers().forEach(a -> {
 			try {
 				System.out.println(read(a));
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		});
@@ -101,6 +101,9 @@ public class UserDAO extends DAO<User> {
 	public User getByLogin(User u) throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from user where username = ? AND password = ?", new Object[] {u.getUsername(), u.getPassword()}).get(0);
 	}
+	public User getByIdRole(int id, int role) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from user where id = ? AND role_id = ?", new Object[] {id, role}).get(0);
+	}
 	
 	public User getById(int id) throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from user where id = ?", new Object[] {id}).get(0);
@@ -124,7 +127,7 @@ public class UserDAO extends DAO<User> {
 	}
 	
 
-	public String read(User u) throws SQLException {
+	public String read(User u) throws SQLException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 		return super.read("select * from user where id = ?", new Object[] { u.getiD() });
 	}

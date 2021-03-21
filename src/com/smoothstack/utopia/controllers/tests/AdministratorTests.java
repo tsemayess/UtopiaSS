@@ -6,11 +6,11 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Test;
 
-import com.smoothstack.utopia.controllers.Administrator;
+import com.smoothstack.utopia.controllers.Controller;
 import com.smoothstack.utopia.domains.Airport;
 
 public class AdministratorTests {
-	Administrator admin = new Administrator();
+	Controller admin = new Controller();
 
 //	@Test
 //	public void airportCheck() throws ClassNotFoundException, SQLException {
@@ -161,8 +161,12 @@ public class AdministratorTests {
 //	public void readEmployees() {
 //		admin.readAllEmployees();
 //	}
+//	@Test
+//	public void readTraveller() {
+//		admin.readAllTravellers();
+//	}
 	@Test
-	public void readTraveller() {
-		admin.readAllTravellers();
+	public void readBookingsByUser() {
+		admin.readBookingsByUser(2);
 	}
 }

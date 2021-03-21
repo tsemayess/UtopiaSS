@@ -4,11 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import com.smoothstack.utopia.controllers.Util;
 import com.smoothstack.utopia.daos.BookingDAO;
 import com.smoothstack.utopia.domains.Booking;
@@ -45,7 +43,6 @@ public class BookingDAOTests {
 	
 		
 	}
-	
 	
 	@Test
 	public void updateIsActiveHP() throws ClassNotFoundException, SQLException {

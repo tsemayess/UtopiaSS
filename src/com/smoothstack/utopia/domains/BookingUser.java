@@ -1,32 +1,32 @@
 package com.smoothstack.utopia.domains;
 
 public class BookingUser {
-	private Booking booking;
-	private User user;
+	private Integer booking, user;
 	/**
 	 * @return the booking
 	 */
-	public Booking getBooking() {
+	public int getBooking() {
 		return booking;
 	}
 	/**
 	 * @param booking the booking to set
 	 */
-	public void setBooking(Booking booking) {
+	public void setBooking(int booking) {
 		this.booking = booking;
 	}
 	/**
 	 * @return the user
 	 */
-	public User getUser() {
+	public int getUser() {
 		return user;
 	}
 	/**
 	 * @param user the user to set
 	 */
-	public void setUser(User user) {
+	public void setUser(int user) {
 		this.user = user;
 	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

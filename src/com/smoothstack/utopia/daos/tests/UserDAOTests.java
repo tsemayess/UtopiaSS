@@ -60,7 +60,7 @@ public class UserDAOTests {
 		users.forEach(a -> {
 			try {
 				System.out.println(dao.read(a));
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				e.printStackTrace();
 			}
 		});
@@ -172,7 +172,7 @@ public class UserDAOTests {
 	}
 	
 	@Test
-	public void readHP() throws SQLException {
+	public void readHP() throws SQLException, ClassNotFoundException {
 		User u = new User();
 		u.setiD(1);
 		System.out.println(dao.read(u));

@@ -26,7 +26,7 @@ public class FlightBooking {
 	 * @param booking the booking to set
 	 */
 	public void setbooking(Booking booking) {
-		booking = booking;
+		this.booking = booking;
 	}
 	@Override
 	public int hashCode() {

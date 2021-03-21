@@ -10,20 +10,22 @@ import com.smoothstack.utopia.daos.AirplaneDAO;
 import com.smoothstack.utopia.daos.AirplaneTypeDAO;
 import com.smoothstack.utopia.daos.AirportDAO;
 import com.smoothstack.utopia.daos.BookingDAO;
+import com.smoothstack.utopia.daos.BookingUserDAO;
 import com.smoothstack.utopia.daos.FlightDAO;
 import com.smoothstack.utopia.daos.PassengerDAO;
 import com.smoothstack.utopia.daos.UserDAO;
 import com.smoothstack.utopia.domains.Airport;
 import com.smoothstack.utopia.domains.Booking;
+import com.smoothstack.utopia.domains.BookingUser;
 import com.smoothstack.utopia.domains.Flight;
 import com.smoothstack.utopia.domains.Passenger;
 import com.smoothstack.utopia.domains.User;
 
-public class Administrator {
+public class Controller {
 	Util util = new Util();
 	Scanner keyboard = new Scanner(System.in);
 
-	public String addAirport() throws SQLException {
+	public String addAirport() {
 		Connection c = null;
 		try {
 			c = util.getConnection();
@@ -53,26 +55,27 @@ public class Administrator {
 
 			// all does not got well rollback changes to prevent update
 			
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Something Went Wrong. Aiport Could Not Be Added");
+			}
 			System.out.println("Airport Could Not Be Added");
 			return "Airport Could Not Be Added";
 
 		} finally {
 			if (c != null) {
-				c.close();
+				try {
+					c.close();
+				} catch (SQLException e) {
+					System.out.println("Something Went Wrong. Aiport Could Not Be Added");
+				}
 			}
 		}
 	}
 
-	/**
-	 * If airport code entered does not exist it will still update "successfully"
-	 * because SQL does not throw an error, however entered values will not be added
-	 * to the table. Find way to fix manually.
-	 * 
-	 * @return
-	 * @throws SQLException
-	 */
-	public String updateAirport() throws SQLException {
+
+	public String updateAirport() {
 		Connection c = null;
 		try {
 			c = util.getConnection();
@@ -101,25 +104,25 @@ public class Administrator {
 
 			// all does not got well rollback changes to prevent update
 			
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Something Went Wrong. Aiport Could Not Be Updated");
+			}
 			return "Airport Could Not Be Updated";
 
 		} finally {
 			if (c != null) {
-				c.close();
+				try {
+					c.close();
+				} catch (SQLException e) {
+					System.out.println("Something Went Wrong. Aiport Could Not Be Updated");
+				}
 			}
 		}
 	}
 
-	/**
-	 * If airport code entered does not exist it will still update "successfully"
-	 * because SQL does not throw an error, however entered values will not be added
-	 * to the table. Find way to fix manually.
-	 * 
-	 * @return
-	 * @throws SQLException
-	 */
-	public String deleteAirport() throws SQLException {
+	public String deleteAirport() {
 		Connection c = null;
 		try {
 			c = util.getConnection();
@@ -145,26 +148,27 @@ public class Administrator {
 
 			// all does not got well rollback changes to prevent update
 			
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Something Went Wrong. Aiport Could Not Be Deleted");
+			}
 			System.out.println("Airport Could Not Be Deleted");
 			return "Airport Could Not Be Deleted";
 
 		} finally {
 			if (c != null) {
-				c.close();
+				try {
+					c.close();
+				} catch (SQLException e) {
+					System.out.println("Something Went Wrong. Aiport Could Not Be Deleted");
+				}
 			}
 		}
 
 	}
 
-	/**
-	 * Gets information of Airport specified by Airport Code
-	 * 
-	 * @return String will all theAirPort Info
-	 * @throws SQLException if something goes wrong with getting info from SQL
-	 *                      Database
-	 */
-	public String readAirport() throws SQLException {
+	public String readAirport() {
 		Connection c = null;
 
 		try {
@@ -188,24 +192,26 @@ public class Administrator {
 		} catch (Exception e) {
 
 			// all does not got well rollback changes to prevent update
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Something Went Wrong Airport Could Not Be Read");
+			}
 			return "Airport Could Not Be Found";
 
 		} finally {
 			if (c != null) {
-				c.close();
+				try {
+					c.close();
+				} catch (SQLException e) {
+					System.out.println("Something Went Wrong Airport Could Not Be Read");
+				}
 
 			}
 		}
 	}
 
-	/**
-	 * Prints string of all the airports and their locations
-	 * 
-	 * @return String which lists every single airport in the Database
-	 * @throws SQLException
-	 */
-	public String readAllAirports() throws SQLException {
+	public String readAllAirports() {
 		Connection c = null;
 
 		try {
@@ -224,12 +230,20 @@ public class Administrator {
 
 			// all does not got well rollback changes to prevent update
 			
-			c.rollback();
+			try {
+				c.rollback();
+			} catch (SQLException e1) {
+				System.out.println("Something Went Wrong Airports Could Not Be Read");
+			}
 			return "All Airports Could Not Be Read";
 
 		} finally {
 			if (c != null) {
-				c.close();
+				try {
+					c.close();
+				} catch (SQLException e) {
+					System.out.println("Something Went Wrong Airports Could Not Be Read");
+				}
 
 			}
 		}
@@ -448,6 +462,8 @@ public class Administrator {
 			c = util.getConnection();
 			FlightDAO dao = new FlightDAO(c);
 			System.out.println(dao.readAll());
+			System.out.println("All Flights");
+			System.out.println(dao.readAll());
 			return dao.readAll();
 
 		} catch (SQLException | ClassNotFoundException e) {
@@ -477,7 +493,7 @@ public class Administrator {
 		return false;
 	}
 
-	public String addBooking() {
+	public String addBooking(int user) {
 		Connection c = null;
 
 		try {
@@ -524,9 +540,17 @@ public class Administrator {
 				System.out.println();
 				p.setBooking(pk);
 				pdao.add(p);
+				
 				Flight f = fdao.getById(b.getFlight());
 				f.setSeats(f.getSeats() + 1);
 				fdao.updateSeats(f);
+				
+				BookingUserDAO bdao = new BookingUserDAO(c);
+				BookingUser bu = new BookingUser();
+				bu.setBooking(pk);
+				bu.setUser(user);
+				bdao.add(bu);
+				
 				c.commit();
 
 			} catch (SQLException | ClassNotFoundException e) {
@@ -705,6 +729,60 @@ public class Administrator {
 
 	}
 
+	public String readAllPassengers() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			PassengerDAO dao = new PassengerDAO(c);
+			dao.readAll();
+			return "success";
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Passengers");
+			return "Something Went Wrong. Could Not List All Passengers";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	public String readBookingsByUser(int userid) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			BookingDAO bdao = new BookingDAO(c);
+			List<Booking> bookings = bdao.listAllByUser(userid);
+			if (bookings.isEmpty()) {
+				System.out.println("There Are No Bookings For This Account");
+				return "fail";
+			}
+			for (int i = 0; i < bookings.size(); i++) {
+				System.out.println(bdao.read(bookings.get(i)) + "\n");
+			}
+			return "success";
+		
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Flights");
+			return "Something Went Wrong. Could Not List All Flights";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+	
 	public String updatePassengerFirst() {
 		Connection c = null;
 
@@ -841,12 +919,46 @@ public class Administrator {
 
 	}
 
-	public String readAllPassengers() {
+	public String updatePassengerDOB() {
 		Connection c = null;
 
 		try {
 			c = util.getConnection();
 			PassengerDAO dao = new PassengerDAO(c);
+			Passenger p;
+
+			System.out.println("Enter ID of Passenger You Want To Update");
+			p = dao.getById(keyboard.nextInt());
+			keyboard.nextLine();
+
+			System.out.println("Enter New Date Of Birth: ");
+			p.setDob(keyboard.nextLine());
+
+			dao.updateDOB(p);
+			c.commit();
+			System.out.println("\n" + dao.read(p) + "\n\nPassenger Date Of Birth Update Successfully");
+			return dao.read(p);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Passenger Date Of Birth Could Not Be Updated");
+			return "Passenger Date Of Birth Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+	
+	public String readAllBookings() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			BookingDAO dao = new BookingDAO(c);
 			dao.readAll();
 			return "success";
 
@@ -1137,4 +1249,26 @@ public class Administrator {
 		}
 		
 	}
+
+
+	public boolean userCheck(int id, int role) {
+		Connection c = null;
+		try {
+			c = util.getConnection();
+		} catch (ClassNotFoundException | SQLException e) {
+			return false;
+		}
+		
+		UserDAO dao = new UserDAO(c);
+		try {
+			if (dao.getByIdRole(id, role) != null) {
+				return true;
+			}
+		} catch (ClassNotFoundException | SQLException e) {}
+		
+		return false;
+	}
+		
 }
+	
+

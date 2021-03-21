@@ -1,5 +1,6 @@
 package com.smoothstack.utopia.engine;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 import com.smoothstack.utopia.controllers.Controller;
 import com.smoothstack.utopia.domains.User;
@@ -11,7 +12,8 @@ public class AdministratorEngine {
 	private User user = null;
 
 	public void run() {
-
+		login();
+		return;
 	}
 
 	public void allActions() {
@@ -58,7 +60,7 @@ public class AdministratorEngine {
 
 	}
 
-	public void flightMenu() {
+	private void flightMenu() {
 		while (true) {
 			try {
 			
@@ -93,7 +95,7 @@ public class AdministratorEngine {
 		}
 	}
 	
-	public void updateFlightMenu() {
+	private void updateFlightMenu() {
 		while (true) {
 			try {
 
@@ -131,7 +133,7 @@ public class AdministratorEngine {
 		}
 	}
 	
-	public void airportMenu() {
+	private void airportMenu() {
 		while (true) {
 			try {
 			
@@ -166,39 +168,7 @@ public class AdministratorEngine {
 		}
 	}
 	
-	public void travellerMenu() {
-		while (true) {
-			try {
-				
-				System.out.println("\n1) Add Travellers \n2) Update Travellers \n3) Read Travellers \n4) Return to Previous Screen");
-				System.out.println("\nEnter An Option Number");
-
-				String s = keyboard.nextLine();
-				int c = Integer.parseInt(s);
-
-				switch (c) {
-				case 1:
-					admin.addUser(3);
-					break;
-				case 2:
-					break;
-				case 3:
-					admin.readAllAirports();
-					break;
-				case 4:
-					return;
-				default:
-					System.out.println("That Is Not a Valid Option. Please Enter A Valid Option.\n");
-					break;
-				}
-
-			} catch (NumberFormatException e) {
-				System.out.println("That Is Not a Valid Option. Please Enter A Valid Option.\n");
-			}
-		}
-	}
-
-	public void getUserIdRole(int role) {
+	private void getUserIdRole(int role) {
 		while (true) {
 			try {
 
@@ -234,7 +204,7 @@ public class AdministratorEngine {
 		}
 	}
 
-	public void updateTravellerMenu(int id) {
+	private void updateTravellerMenu(int id) {
 		while (true) {
 			try {
 
@@ -272,7 +242,7 @@ public class AdministratorEngine {
 		}
 	}
 
-	public void updateEmployeeMenu(int id) {
+	private void updateEmployeeMenu(int id) {
 		while (true) {
 			try {
 
@@ -310,7 +280,7 @@ public class AdministratorEngine {
 		}
 	}
 
-	public void bookingMenu() {
+	private void bookingMenu() {
 		while (true) {
 			try {
 
@@ -347,7 +317,7 @@ public class AdministratorEngine {
 		}
 	}
 
-	public void passengerMenu() {
+	private void passengerMenu() {
 		while (true) {
 			try {
 
@@ -388,8 +358,29 @@ public class AdministratorEngine {
 		}
 	}
 
-	public void overrideCancellation() {
+	private void overrideCancellation() {
 		admin.overrideCancel();
 	}
 
+	private void login() {
+		while (true) {
+			try {
+			System.out.println("\nEnter Username. Or Enter \"R\" To Return To Previous Screen");
+			String username = keyboard.nextLine();
+			
+			if (username.equalsIgnoreCase("r")) {
+				return;
+			}
+			System.out.println("Enter Password");
+			String password = keyboard.nextLine();
+			user = admin.login(2, username, password);
+			
+			allActions();
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("Username Or Password Is Incorrect. Try Again");
+			} catch (ClassNotFoundException | SQLException e) {
+				System.out.println("Something Went Wrong. Please Try Again");
+			} 
+		}
+	}
 }

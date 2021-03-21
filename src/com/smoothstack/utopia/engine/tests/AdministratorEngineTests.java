@@ -22,8 +22,12 @@ public class AdministratorEngineTests {
 //		engine.menuThree();
 //	}
 
+//	@Test
+//	public void allActions() {
+//		engine.allActions();
+//	}
 	@Test
-	public void allActions() {
-		engine.allActions();
+	public void login() {
+		engine.run();
 	}
 }

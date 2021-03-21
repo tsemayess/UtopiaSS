@@ -99,7 +99,7 @@ public class UserDAO extends DAO<User> {
 	}
 	
 	public User getByLogin(User u) throws ClassNotFoundException, SQLException {
-		return super.listAll("select * from user where username = ? AND password = ?", new Object[] {u.getUsername(), u.getPassword()}).get(0);
+		return super.listAll("select * from user where username = ? AND password = ? AND role_id = ?", new Object[] {u.getUsername(), u.getPassword(), u.getRole()}).get(0);
 	}
 	public User getByIdRole(int id, int role) throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from user where id = ? AND role_id = ?", new Object[] {id, role}).get(0);

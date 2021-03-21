@@ -1268,6 +1268,24 @@ public class Controller {
 		
 		return false;
 	}
+	
+	public User login(int role, String username, String password) throws ClassNotFoundException, SQLException {
+		Connection c = null;
+		
+
+			c = util.getConnection();
+			UserDAO dao = new UserDAO(c);
+			User u = new User();
+			
+			u.setUsername(username);
+			u.setPassword(password);
+			u.setRole(role);
+			
+			User got = dao.getByLogin(u);
+			System.out.println("\nLogin Sucess. Welcome " + got.getFirstName() + "!");
+			return got;
+			
+	}
 		
 }
 	

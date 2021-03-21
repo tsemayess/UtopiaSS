@@ -39,6 +39,10 @@ public class RouteDAO extends DAO<Route> {
 		// TODO Auto-generated method stub
 		return super.listAll("select * from route", new Object[] {});
 	}
+	
+	public Route getById(int id) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from route where id = ?", new Object[] {id}).get(0);
+	}
 
 
 	public List<Route> listAllByOrigin(Airport a) throws ClassNotFoundException, SQLException {

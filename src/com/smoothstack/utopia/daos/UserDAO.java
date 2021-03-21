@@ -5,11 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.smoothstack.utopia.daos.AirplaneTypeDAO;
 import com.smoothstack.utopia.daos.DAO;
-import com.smoothstack.utopia.domains.AirplaneType;
-import com.smoothstack.utopia.domains.Route;
 import com.smoothstack.utopia.domains.User;
 import com.smoothstack.utopia.domains.UserRole;
 
@@ -24,7 +20,7 @@ public class UserDAO extends DAO<User> {
 
 	public void add(User u) throws ClassNotFoundException, SQLException {
 		save("insert into user (role_id, given_name, family_name, username, email, password, phone) values (?, ?, ?, ?, ?, ?, ?)", 
-				new Object[] {u.getRole(), u.getFirstName(), u.getiD(), u.getFirstName(), u.getLastName(), u.getUsername(),
+				new Object[] {u.getRole(), u.getFirstName(), u.getLastName(), u.getUsername(),
 				u.getEmail(), u.getPassword(), u.getPhone()});
 	}
 	
@@ -42,7 +38,7 @@ public class UserDAO extends DAO<User> {
 	public void updatePassword(User u) throws ClassNotFoundException, SQLException {
 		save("update user set password = ? where id = ?", new Object[] {u.getPassword(), u.getiD()});
 	}
-	public void updatEmail(User u) throws ClassNotFoundException, SQLException {
+	public void updateEmail(User u) throws ClassNotFoundException, SQLException {
 		save("update user set email = ? where id = ?", new Object[] {u.getEmail(), u.getiD()});
 	}
 	
@@ -52,6 +48,17 @@ public class UserDAO extends DAO<User> {
 	
 	public void delete(User u) throws ClassNotFoundException, SQLException {
 		save("delete from user where id = ?", new Object[] {u.getiD()});
+	}
+	
+	public void readAll() throws ClassNotFoundException, SQLException {
+		listAll().forEach(a -> {
+			try {
+				System.out.println(read(a));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		
 	}
 	
 	public List<User> listAll() throws ClassNotFoundException, SQLException {
@@ -73,30 +80,34 @@ public class UserDAO extends DAO<User> {
 		while (resultSet.next()) {
 			User u = new User();
 
-			u.setiD(resultSet.getInt(resultSet.getInt("id")));
+			u.setiD(resultSet.getInt("id"));
 			u.setFirstName(resultSet.getString("given_name"));
-			u.setLastName(resultSet.getString("last_name"));
+			u.setLastName(resultSet.getString("family_name"));
 			u.setUsername(resultSet.getString("username"));
 			u.setRole(resultSet.getInt("role_id"));
 			users.add(u);
 		}
 		return users;
 	}
+	
 
-
+	public String read(User u) throws SQLException {
+		// TODO Auto-generated method stub
+		return super.read("select * from user where id = ?", new Object[] { u.getiD() });
+	}
+	
 	@Override
 	public String extractString(ResultSet resultSet) throws SQLException {
 		String result = "";
 		while (resultSet.next()) {
 
-			UserRoleDAO role = new UserRoleDAO(c);
 			UserRole r = new UserRole();
-			r.setiD(resultSet.getInt("username"));
+			r.setiD(resultSet.getInt("role_id"));
 
-			result += "User ID Number: " + resultSet.getString("id") + "\nRole: " + r.getName() + "\nFirstName: "
-					+ resultSet.getString("given_name") + "\nLast Name: " + resultSet.getString("family_name")
-					+ "\n Username: " + resultSet.getString("username") + "\nEmail: " + resultSet.getString("email")
-					+ "\nPhone: " + resultSet.getString("phone");
+			result += "User Account Number: " + resultSet.getInt("id") + "\nRole:\t\t" + r.getName() + "\nFirst Name:\t"
+					+ resultSet.getString("given_name") + "\nLast Name:\t" + resultSet.getString("family_name")
+					+ "\nUsername:\t" + resultSet.getString("username") + "\nEmail:\t\t" + resultSet.getString("email")
+					+ "\nPhone:\t\t" + resultSet.getString("phone");
 
 		}
 		return result;

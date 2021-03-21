@@ -1,8 +1,7 @@
 package com.smoothstack.utopia.domains;
 
 public class Passenger {
-	private Integer iD;
-	Booking booking;
+	private Integer iD, booking;
 	StringBuffer firstName, lastName, gender, dob, address;
 	/**
 	 * @return the iD
@@ -19,13 +18,13 @@ public class Passenger {
 	/**
 	 * @return the booking
 	 */
-	public Booking getBooking() {
+	public int getBooking() {
 		return booking;
 	}
 	/**
 	 * @param booking the booking to set
 	 */
-	public void setBooking(Booking booking) {
+	public void setBooking(int booking) {
 		this.booking = booking;
 	}
 	/**

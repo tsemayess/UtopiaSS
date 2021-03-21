@@ -2,7 +2,6 @@ package com.smoothstack.utopia.daos.tests;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,8 +31,7 @@ public class AirportDAOTests {
 	
 	@Test
 	public void readAllHP() throws ClassNotFoundException, SQLException {
-		List<Airport> airports = dao.listAll();
-		airports.forEach(a -> {
+		dao.listAll().forEach(a -> {
 			try {
 				System.out.println(dao.read(a));
 			} catch (SQLException e) {

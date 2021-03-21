@@ -18,49 +18,43 @@ public class FlightDAO extends DAO<Flight> {
 		super(c);
 		this.c = c;
 	}
-	
+
 	public void add(Flight f) throws ClassNotFoundException, SQLException {
-		Airplane a = new Airplane();
-		a.setAirplaneID(f.getAirplane());
-		
-		AirplaneDAO dao = new AirplaneDAO(c);
-		AirplaneTypeDAO typedao = new AirplaneTypeDAO(c);
-		
-		
-		save("insert into flight values (?, ?, ?, ?, ?, ?)", 
-				new Object[] {f.getiD(), f.getRoute(), f.getAirplane(), f.getDeparture(), 
-						typedao.getById(dao.getById(f.getAirplane()).getType()).getCapacity(), f.getPrice()});
+		save("insert into flight values (?, ?, ?, ?, ?, ?)",
+				new Object[] { f.getiD(), f.getRoute(), f.getAirplane(), f.getDeparture(), f.getSeats(), f.getPrice() });
 	}
-	
+
 	public void updateRoute(Flight f) throws ClassNotFoundException, SQLException {
-		save("update flight set route_id = ? where id = ?", new Object[] {f.getRoute(), f.getiD()});
+		save("update flight set route_id = ? where id = ?", new Object[] { f.getRoute(), f.getiD() });
 	}
-	
+
 	public void updateAirplane(Flight f) throws ClassNotFoundException, SQLException {
-		save("update flight set airplane_id = ? where id = ?", new Object[] {f.getAirplane(), f.getiD()});
+		save("update flight set airplane_id = ? where id = ?", new Object[] { f.getAirplane(), f.getiD() });
 	}
-	
+
 	public void updateDeparture(Flight f) throws ClassNotFoundException, SQLException {
-		save("update flight set departure_time = ? where id = ?", new Object[] {f.getDeparture(), f.getiD()});
+		save("update flight set departure_time = ? where id = ?", new Object[] { f.getDeparture(), f.getiD() });
 	}
-	
+
 	public void updateSeats(Flight f) throws ClassNotFoundException, SQLException {
-		save("update flight set reserved_seats = ? where id = ?", new Object[] {f.getSeats(), f.getiD()});
+		save("update flight set reserved_seats = ? where id = ?", new Object[] { f.getSeats(), f.getiD() });
 	}
-	
+
 	public void updatePrice(Flight f) throws ClassNotFoundException, SQLException {
-		save("update flight set seat_price = ? where id = ?", new Object[] {f.getPrice(), f.getiD()});
+		save("update flight set seat_price = ? where id = ?", new Object[] { f.getPrice(), f.getiD() });
 	}
 
 	public void delete(Flight f) throws ClassNotFoundException, SQLException {
-		save("delete from flight where id = ?", new Object[] {f.getiD()});
+		save("delete from flight where id = ?", new Object[] { f.getiD() });
+	}
+
+	public Flight getById(int id) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from flight where id = ?", new Object[] { id }).get(0);
 	}
 
 	public List<Flight> listAll() throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from flight", new Object[] {});
 	}
-	
-	
 
 	@Override
 	public List<Flight> extractList(ResultSet resultSet) throws SQLException {
@@ -77,6 +71,14 @@ public class FlightDAO extends DAO<Flight> {
 			flights.add(a);
 		}
 		return flights;
+	}
+
+	public String shortRead(Flight f) throws ClassNotFoundException, SQLException {
+		RouteDAO rDAO = new RouteDAO(c);
+		String result = rDAO.read(rDAO.getById((f.getRoute())));
+		return "Flight " + f.getiD() + "\n" + result.substring(result.lastIndexOf("\n") + 2) + "\nDeparture: "
+				+ f.getDeparture();
+
 	}
 
 	public String read(Flight f) throws SQLException {

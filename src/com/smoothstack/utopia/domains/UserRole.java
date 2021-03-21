@@ -20,10 +20,13 @@ public class UserRole {
 		switch(iD) {
 		case 1:
 			name = new StringBuffer("EMPLOYEE");
+			break;
 		case 2:
-			name = new StringBuffer("ADMINISTRATIVE");
+			name = new StringBuffer("ADMINISTRATOR");
+			break;
 		case 3:
 			name = new StringBuffer("TRAVELER");
+			break;
 		}
 	}
 	/**

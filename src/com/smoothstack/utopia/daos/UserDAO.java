@@ -18,8 +18,8 @@ public class UserDAO extends DAO<User> {
 		this.c = c;
 	}
 
-	public void add(User u) throws ClassNotFoundException, SQLException {
-		save("insert into user (role_id, given_name, family_name, username, email, password, phone) values (?, ?, ?, ?, ?, ?, ?)", 
+	public int add(User u) throws ClassNotFoundException, SQLException {
+		return savePK("insert into user (role_id, given_name, family_name, username, email, password, phone) values (?, ?, ?, ?, ?, ?, ?)", 
 				new Object[] {u.getRole(), u.getFirstName(), u.getLastName(), u.getUsername(),
 				u.getEmail(), u.getPassword(), u.getPhone()});
 	}
@@ -61,17 +61,49 @@ public class UserDAO extends DAO<User> {
 		
 	}
 	
+	public void readAllEmployees() throws ClassNotFoundException, SQLException {
+		listAllEmployees().forEach(a -> {
+			try {
+				System.out.println(read(a));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		
+	}
+	
+	public void readAllTravellers() throws ClassNotFoundException, SQLException {
+		listAllTravellers().forEach(a -> {
+			try {
+				System.out.println(read(a));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+		
+	}
+	
 	public List<User> listAll() throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		return super.listAll("select * from user", new Object[] {});
+	}
+	
+	public List<User> listAllEmployees() throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return super.listAll("select * from user where role_id = 1", new Object[] {});
+	}
+	
+	public List<User> listAllTravellers() throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return super.listAll("select * from user where role_id = 3", new Object[] {});
 	}
 	
 	public User getByLogin(User u) throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from user where username = ? AND password = ?", new Object[] {u.getUsername(), u.getPassword()}).get(0);
 	}
 	
-	public User getById(User u) throws ClassNotFoundException, SQLException {
-		return super.listAll("select * from user where id = ?", new Object[] {u.getiD()}).get(0);
+	public User getById(int id) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from user where id = ?", new Object[] {id}).get(0);
 	}
 
 	@Override
@@ -85,6 +117,7 @@ public class UserDAO extends DAO<User> {
 			u.setLastName(resultSet.getString("family_name"));
 			u.setUsername(resultSet.getString("username"));
 			u.setRole(resultSet.getInt("role_id"));
+			u.setPassword(resultSet.getString("password"));
 			users.add(u);
 		}
 		return users;

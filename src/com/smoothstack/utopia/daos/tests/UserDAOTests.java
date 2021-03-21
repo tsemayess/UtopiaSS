@@ -51,7 +51,7 @@ public class UserDAOTests {
 	public void getByiDHP() throws ClassNotFoundException, SQLException {
 		User u  = new User();
 		u.setiD(1);
-		System.out.println(dao.read(dao.getById(u)));
+		System.out.println(dao.read(dao.getById(u.getiD())));
 	}
 	
 	@Test

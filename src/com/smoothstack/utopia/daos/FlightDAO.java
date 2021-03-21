@@ -52,6 +52,15 @@ public class FlightDAO extends DAO<Flight> {
 		return super.listAll("select * from flight where id = ?", new Object[] { id }).get(0);
 	}
 
+	public String readAll() throws SQLException, ClassNotFoundException {
+		List<Flight> flights = listAll();
+		String s = "";
+		for (int i = 0; i < flights.size(); i++) {
+			s += read(flights.get(i)) + "\n\n";
+		}
+		return s;
+	}
+	
 	public List<Flight> listAll() throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from flight", new Object[] {});
 	}

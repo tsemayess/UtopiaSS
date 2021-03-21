@@ -58,7 +58,7 @@ public class PassengerDAO extends DAO<Passenger> {
 	public void readAll() throws ClassNotFoundException, SQLException {
 		listAll().forEach(p -> {
 			try {
-				System.out.println(read(p));
+				System.out.println(read(p) + "\n");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

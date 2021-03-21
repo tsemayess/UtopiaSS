@@ -93,12 +93,76 @@ public class AdministratorTests {
 //	}
 //
 //	@Test
+//	public void readAllFlights() {
+//			admin.readAllFlights();
+//	}
+//	@Test
 //	public void addBooking() {
 //			admin.addBooking();
 //	}
-	
+//	
+//	@Test
+//	public void cancelBooking() {
+//			admin.cancelBooking();
+//	}
+//	
+//	@Test
+//	public void updatePassengerFirst() {
+//			admin.updatePassengerFirst();
+//	}
+//	
+//	@Test
+//	public void updatePassengerLast() {
+//			admin.updatePassengerLast();
+//	}
+//	
+//	@Test
+//	public void updatePassengerGender() {
+//			admin.updatePassengerGender();
+//	}
+//	@Test
+//	public void updatePassengerAddress() {
+//			admin.updatePassengerAddress();
+//	}
+//	@Test
+//	public void readAllPassengers() {
+//		admin.readAllPassengers();
+//	}
+//	@Test
+//	public void overrideCancel() {
+//		admin.cancelBooking();
+//	}
+//	@Test
+//	public void addUser() {
+//		admin.addUser(1);
+//	}
+//	
+//	@Test
+//	public void updateUserFirst() {
+//		admin.updateUserFirst(2);
+//	}
+//	@Test
+//	public void updateUserLast() {
+//		admin.updateUserLast(2);
+//	}
+//	@Test
+//	public void updateUserEmail() {
+//		admin.updateUserEmail(2);
+//	}
+//	@Test
+//	public void updateUserPhone() {
+//		admin.updateUserPhone(2);
+//	}
+//	@Test
+//	public void updateUserPassword() {
+//		admin.updatePassword(2);
+//	}
+//	@Test
+//	public void readEmployees() {
+//		admin.readAllEmployees();
+//	}
 	@Test
-	public void cancelBooking() {
-			admin.cancelBooking();
+	public void readTraveller() {
+		admin.readAllTravellers();
 	}
 }

@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Function;
-
 import com.mysql.cj.jdbc.exceptions.MysqlDataTruncation;
 import com.smoothstack.utopia.daos.AirplaneDAO;
 import com.smoothstack.utopia.daos.AirplaneTypeDAO;
@@ -14,10 +12,12 @@ import com.smoothstack.utopia.daos.AirportDAO;
 import com.smoothstack.utopia.daos.BookingDAO;
 import com.smoothstack.utopia.daos.FlightDAO;
 import com.smoothstack.utopia.daos.PassengerDAO;
+import com.smoothstack.utopia.daos.UserDAO;
 import com.smoothstack.utopia.domains.Airport;
 import com.smoothstack.utopia.domains.Booking;
 import com.smoothstack.utopia.domains.Flight;
 import com.smoothstack.utopia.domains.Passenger;
+import com.smoothstack.utopia.domains.User;
 
 public class Administrator {
 	Util util = new Util();
@@ -52,7 +52,7 @@ public class Administrator {
 		} catch (Exception e) {
 
 			// all does not got well rollback changes to prevent update
-			e.printStackTrace();
+			
 			c.rollback();
 			System.out.println("Airport Could Not Be Added");
 			return "Airport Could Not Be Added";
@@ -100,7 +100,7 @@ public class Administrator {
 		} catch (Exception e) {
 
 			// all does not got well rollback changes to prevent update
-			e.printStackTrace();
+			
 			c.rollback();
 			return "Airport Could Not Be Updated";
 
@@ -144,7 +144,7 @@ public class Administrator {
 		} catch (Exception e) {
 
 			// all does not got well rollback changes to prevent update
-			e.printStackTrace();
+			
 			c.rollback();
 			System.out.println("Airport Could Not Be Deleted");
 			return "Airport Could Not Be Deleted";
@@ -188,7 +188,6 @@ public class Administrator {
 		} catch (Exception e) {
 
 			// all does not got well rollback changes to prevent update
-			e.printStackTrace();
 			c.rollback();
 			return "Airport Could Not Be Found";
 
@@ -224,7 +223,7 @@ public class Administrator {
 		} catch (Exception e) {
 
 			// all does not got well rollback changes to prevent update
-			e.printStackTrace();
+			
 			c.rollback();
 			return "All Airports Could Not Be Read";
 
@@ -442,6 +441,29 @@ public class Administrator {
 
 	}
 
+	public String readAllFlights() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			FlightDAO dao = new FlightDAO(c);
+			System.out.println(dao.readAll());
+			return dao.readAll();
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Flights");
+			return "Something Went Wrong. Could Not List All Flights";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
 	private boolean flightFull(Flight f, Connection c) throws ClassNotFoundException, SQLException {
 		FlightDAO dao = new FlightDAO(c);
 		AirplaneDAO airdao = new AirplaneDAO(c);
@@ -508,7 +530,7 @@ public class Administrator {
 				c.commit();
 
 			} catch (SQLException | ClassNotFoundException e) {
-				e.printStackTrace();
+				
 				dao.delete(dao.getById(pk));
 				System.out.println("Something Went Wrong. Flight Could Not Be Booked");
 				return "Flight Could Not Be Booked";
@@ -519,7 +541,7 @@ public class Administrator {
 
 		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println("Something Went Wrong. Flight Could Not Be Booked");
-			e.printStackTrace();
+			
 			return "Flight Could Not Be Booked";
 		} finally {
 			if (c != null) {
@@ -542,38 +564,45 @@ public class Administrator {
 			BookingDAO dao = new BookingDAO(c);
 			String booking = "";
 			String ps = "";
+			FlightDAO fdao = new FlightDAO(c);
+			Flight f;
 
 			try {
-			System.out.println("Enter ID Of Booking You Want To Cancel");
-			int id = keyboard.nextInt();
-			keyboard.nextLine();
-			b = dao.getById(id);
-			booking = dao.read(b);
-			PassengerDAO pDAO = new PassengerDAO(c);
-			Passenger p = pDAO.getByBookingId(id);
-			ps = "\nPassenger: " + p.getFirstName() + " " + p.getLastName() + "\n";
-			
-			if (b.getIsActive() == 2) {
-				System.out.println(booking + ps);
-				System.out.println("Booking "  + b.getBookingID() + " Has Already Been Cancelled");
-				return "fail";
-			}
+				System.out.println("Enter ID Of Booking You Want To Cancel");
+				int id = keyboard.nextInt();
+				keyboard.nextLine();
+				b = dao.getById(id);
+				booking = dao.read(b);
+				
+				PassengerDAO pDAO = new PassengerDAO(c);
+				Passenger p = pDAO.getByBookingId(id);
+				ps = "\nPassenger: " + p.getFirstName() + " " + p.getLastName() + "\n";
+				
+				f = fdao.getById(b.getFlight());
+
+				if (b.getIsActive() == 2) {
+					System.out.println(booking + ps);
+					System.out.println("Booking " + b.getBookingID() + " Has Already Been Cancelled");
+					return "fail";
+				}
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("This Booking Does Not Exist");
 				return "fail";
 			}
-			
-			
+
 			boolean q = true;
 
 			while (q) {
 				System.out.println(booking + ps);
-				System.out.println("Is This The Flight Booking You Would Like To Cancel? Enter Y Or N\n");
+				System.out.println("Is This The Flight Booking You Would Like To Cancel? Enter Y Or N");
 				String a = keyboard.nextLine();
 
 				if (a.equalsIgnoreCase("y")) {
 					b.setIsActive(2);
 					dao.updateIsActive(b);
+					f.setSeats(f.getSeats() - 1);
+					fdao.updateSeats(f);
+
 					q = false;
 				} else if (a.equalsIgnoreCase("n")) {
 					return "no";
@@ -587,7 +616,7 @@ public class Administrator {
 
 		} catch (SQLException | ClassNotFoundException e) {
 			System.out.println("Something Went Wrong. Flight Booking Could Not Be Cancelled");
-			e.printStackTrace();
+			
 			return "Something Went Wrong. Flight Booking Could Not Be Cancelled";
 		} finally {
 			if (c != null) {
@@ -600,4 +629,512 @@ public class Administrator {
 
 	}
 
+	public String overrideCancel() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+
+			Booking b = new Booking();
+			BookingDAO dao = new BookingDAO(c);
+			String booking = "";
+			String ps = "";
+
+			try {
+				System.out.println("Enter ID Of Booking You Want To Override Cancel");
+				int id = keyboard.nextInt();
+				keyboard.nextLine();
+				b = dao.getById(id);
+				booking = dao.read(b);
+				PassengerDAO pDAO = new PassengerDAO(c);
+				Passenger p = pDAO.getByBookingId(id);
+				ps = "\nPassenger: " + p.getFirstName() + " " + p.getLastName() + "\n";
+
+				if (b.getIsActive() == 1) {
+					System.out.println(booking + ps);
+					System.out.println("Booking " + b.getBookingID() + " Is Active And Not Cancelled");
+					return "fail";
+				}
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("This Booking Does Not Exist");
+				return "fail";
+			}
+
+			boolean q = true;
+
+			while (q) {
+				System.out.println(booking + ps);
+				System.out.println("Is This The Flight Booking You Would Like To Cancel Override? Enter Y Or N");
+				String a = keyboard.nextLine();
+				FlightDAO fdao = new FlightDAO(c);
+				if (a.equalsIgnoreCase("y")) {
+					Flight f = fdao.getById(b.getFlight());
+
+					if (flightFull(f, c)) {
+						System.out.println("This Flight Is Full. Booking Could Not Be Renewed");
+						return "fail";
+					}
+
+					b.setIsActive(1);
+					dao.updateIsActive(b);
+					f.setSeats(f.getSeats() + 1);
+					fdao.updateSeats(f);
+					q = false;
+				} else if (a.equalsIgnoreCase("n")) {
+					return "no";
+				} else {
+					System.out.println("Input Formatted Incorrectly. Try Again\n");
+				}
+			}
+			c.commit();
+			System.out.println("Booking " + b.getBookingID() + " Cancel Has Been Overriden.");
+			return "Booking " + b.getBookingID() + " Has Been Cancelled";
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Flight Booking Could Not Be Uncancelled");
+			
+			return "Something Went Wrong. Flight Booking Could Not Be Uncancelled";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	public String updatePassengerFirst() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			PassengerDAO dao = new PassengerDAO(c);
+			Passenger p;
+
+			System.out.println("Enter ID of Passenger You Want To Update");
+			p = dao.getById(keyboard.nextInt());
+			keyboard.nextLine();
+
+			System.out.println("Enter New First Name: ");
+			p.setFirstName(keyboard.nextLine());
+
+			dao.updateFirst(p);
+			c.commit();
+			System.out.println("\n" + dao.read(p) + "\n\nPassenger First Name Update Successfully");
+			return dao.read(p);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Passenger First Name Could Not Be Updated");
+			return "Passenger First Name Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	public String updatePassengerLast() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			PassengerDAO dao = new PassengerDAO(c);
+			Passenger p;
+
+			System.out.println("Enter ID of Passenger You Want To Update");
+			p = dao.getById(keyboard.nextInt());
+			keyboard.nextLine();
+
+			System.out.println("Enter New Last Name: ");
+			p.setLastName(keyboard.nextLine());
+
+			dao.updateLast(p);
+			c.commit();
+			System.out.println("\n" + dao.read(p) + "\n\nPassenger Last Name Update Successfully");
+			return dao.read(p);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Passenger Last Name Could Not Be Updated");
+			return "Passenger Last Name Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	public String updatePassengerGender() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			PassengerDAO dao = new PassengerDAO(c);
+			Passenger p;
+
+			System.out.println("Enter ID of Passenger You Want To Update");
+			p = dao.getById(keyboard.nextInt());
+			keyboard.nextLine();
+
+			System.out.println("Enter New Gender: ");
+			p.setGender(keyboard.nextLine());
+
+			dao.updateGender(p);
+			c.commit();
+			System.out.println("\n" + dao.read(p) + "\n\nPassenger Last Name Update Successfully");
+			return dao.read(p);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Passenger Last Name Could Not Be Updated");
+			return "Passenger Last Name Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	public String updatePassengerAddress() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			PassengerDAO dao = new PassengerDAO(c);
+			Passenger p;
+
+			System.out.println("Enter ID of Passenger You Want To Update");
+			p = dao.getById(keyboard.nextInt());
+			keyboard.nextLine();
+
+			System.out.println("Enter New Address: ");
+			p.setAddress(keyboard.nextLine());
+
+			dao.updateAddress(p);
+			c.commit();
+			System.out.println("\n" + dao.read(p) + "\n\nPassenger Address Update Successfully");
+			return dao.read(p);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Passenger Address Could Not Be Updated");
+			return "Passenger Address Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	public String readAllPassengers() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			PassengerDAO dao = new PassengerDAO(c);
+			dao.readAll();
+			return "success";
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Passengers");
+			return "Something Went Wrong. Could Not List All Passengers";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+	
+	public String addUser(int userType) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			
+			User u = new User();
+			UserDAO dao = new UserDAO(c);
+			
+			String t = "";
+			
+			if (userType == 1) {
+				t = "Employee";
+			} else if (userType == 3) {
+				t = "Traveller";
+			} else if (userType == 2) {
+				t = "Administrator";
+			}
+
+			u.setRole(userType);
+
+			System.out.println("Enter New " + t + " First Name");
+			u.setFirstName(keyboard.nextLine());
+
+			System.out.println("Enter New " + t + " Last Name");
+			u.setLastName(keyboard.nextLine());
+
+			System.out.println("Enter New " + t + " Email");
+			u.setEmail(keyboard.nextLine());
+
+			System.out.println("Enter New " + t + " Phone Number");
+			u.setPhone(keyboard.nextLine());
+
+			System.out.println("Enter New " + t + " Username");
+			u.setUsername(keyboard.nextLine());
+			
+			System.out.println("Enter New " + t + " Password");
+			u.setPassword(keyboard.nextLine());
+
+			int pk = dao.add(u);
+			c.commit();
+
+			
+			System.out.println("\n" + dao.read(dao.getById(pk)) + "\n\nNew Account Successfully Created!");
+			return dao.read(dao.getById(pk));
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. User Could Not Be Added");
+			return "Something Went Wrong. User Could Not Be Added";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
+	public String updateUserFirst(int id) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			
+			UserDAO dao = new UserDAO(c);
+			User u = dao.getById(id);
+
+			System.out.println("Enter New First Name");
+			u.setFirstName(keyboard.nextLine());
+
+			dao.updateFirst(u);
+			c.commit();
+
+			
+			System.out.println("\n" + dao.read(u) + "\n\nAccount Successfully Updated");
+			return dao.read(u);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Account Could Not Be Updated");
+			return "Something Went Wrong. Account Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {}
+			}
+		}
+	}
+
+	public String updateUserLast(int id) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			
+			UserDAO dao = new UserDAO(c);
+			User u = dao.getById(id);
+
+			System.out.println("Enter New Last Name");
+			u.setLastName(keyboard.nextLine());
+
+			dao.updateLast(u);
+			c.commit();
+
+			
+			System.out.println("\n" + dao.read(u) + "\n\nAccount Successfully Updated");
+			return dao.read(u);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Account Could Not Be Updated");
+			return "Something Went Wrong. Account Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {}
+			}
+		}
+	}
+
+	public String updateUserEmail(int id) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			
+			UserDAO dao = new UserDAO(c);
+			User u = dao.getById(id);
+
+			System.out.println("Enter New Email Address");
+			u.setEmail(keyboard.nextLine());
+
+			dao.updateEmail(u);
+			c.commit();
+
+			
+			System.out.println("\n" + dao.read(u) + "\n\nAccount Successfully Updated");
+			return dao.read(u);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Account Could Not Be Updated");
+			return "Something Went Wrong. Account Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {}
+			}
+		}
+	}
+
+	public String updateUserPhone(int id) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			
+			UserDAO dao = new UserDAO(c);
+			User u = dao.getById(id);
+
+			System.out.println("Enter New Phone Number");
+			u.setPhone(keyboard.nextLine());
+
+			dao.updatePhone(u);
+			c.commit();
+
+			
+			System.out.println("\n" + dao.read(u) + "\n\nAccount Successfully Updated");
+			return dao.read(u);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Account Could Not Be Updated");
+			return "Something Went Wrong. Account Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {}
+			}
+		}
+	}
+
+	public String updatePassword(int id) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			
+			UserDAO dao = new UserDAO(c);
+			User u = dao.getById(id);
+			
+			boolean b = true;
+			while(b) {
+				System.out.println("Enter Current Password Or Enter \"C\" To Cancel Password Change.");
+				String pass = keyboard.nextLine();
+				
+				if (pass.equals(u.getPassword())) {
+					b = false;
+				} else if(pass.equalsIgnoreCase("c")) {
+					return "fail";	
+				} else {
+					System.out.println("Password Incorrect. Please Try Again\n");
+				}
+			}
+			
+			System.out.println("\nEnter New Password");
+			u.setPassword(keyboard.nextLine());
+
+			dao.updatePassword(u);
+			c.commit();
+
+			
+			System.out.println("\nPassword Successfully Updated\n");
+			return dao.read(u);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Password Could Not Be Updated");
+			return "Something Went Wrong. Password Could Not Be Updated";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {}
+			}
+		}
+	}
+	
+	public String readAllEmployees() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			UserDAO dao = new UserDAO(c);
+			dao.readAllEmployees();
+			return "success";
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Passengers");
+			return "Something Went Wrong. Could Not List All Passengers";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+	}
+	
+	public String readAllTravellers() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			UserDAO dao = new UserDAO(c);
+			dao.readAllTravellers();
+			return "success";
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Passengers");
+			return "Something Went Wrong. Could Not List All Passengers";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+	}
 }

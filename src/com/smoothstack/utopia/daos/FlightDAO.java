@@ -100,7 +100,7 @@ public class FlightDAO extends DAO<Flight> {
 		RouteDAO rDAO = new RouteDAO(c);
 		String result = rDAO.read(rDAO.getById((f.getRoute())));
 		return "Flight " + f.getiD() + "\n" + result.substring(result.lastIndexOf("\n") + 1) + "\nDeparture: "
-				+ f.getDeparture();
+				+ f.getDeparture() + "\nArrival: " + f.getArrival();
 
 	}
 

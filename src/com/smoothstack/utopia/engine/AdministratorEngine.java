@@ -158,7 +158,7 @@ public class AdministratorEngine {
 
 				System.out.println(
 						"\n1) Add Airport \n2) Update Airport \n3) Read All Airports \n4) Return to Previous Screen");
-				System.out.println("\nFEnter An Option Number");
+				System.out.println("\nEnter An Option Number");
 
 				String s = keyboard.nextLine();
 				int c = Integer.parseInt(s);

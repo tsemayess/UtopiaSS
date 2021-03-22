@@ -9,6 +9,7 @@ import java.util.List;
 import com.smoothstack.utopia.domains.Booking;
 import com.smoothstack.utopia.domains.BookingUser;
 import com.smoothstack.utopia.domains.Flight;
+import com.smoothstack.utopia.domains.Passenger;
 
 public class BookingDAO extends DAO<Booking> {
 	
@@ -98,10 +99,17 @@ public class BookingDAO extends DAO<Booking> {
 			FlightDAO f = new FlightDAO(c);
 			Booking b = new Booking();
 			b.setIsActive(resultSet.getInt("is_active"));
+			
+			PassengerDAO pDAO = new PassengerDAO(c);
+			Passenger p = null;
+			try {
+				p = pDAO.getByBookingId(resultSet.getInt("id"));
+			} catch (ClassNotFoundException e1) {}
 			try {
 				result += "Booking: " + resultSet.getInt("id") + "\n"
 						+ f.shortRead(f.getById(resultSet.getInt("flight_id"))) + "\nStatus: " + b.isActiveString()
-						+ "\nConfirmation Code: " + resultSet.getString("confirmation_code");
+						+ "\nConfirmation Code: " + resultSet.getString("confirmation_code") + "\nPassenger: " + p.getFirstName() 
+						+ " " + p.getLastName();
 			} catch (ClassNotFoundException e) {
 			}
 		}

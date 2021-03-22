@@ -26,6 +26,10 @@ public class AirportDAO extends DAO<Airport> {
 	public void delete(Airport a) throws ClassNotFoundException, SQLException {
 		save("delete from airport where iata_id = ?", new Object[] {a.getAirportCode()});
 	}
+	
+	public Airport getById(String id) throws ClassNotFoundException, SQLException {
+		return super.listAll("select * from airport where iata_id = ?", new Object[] {id}).get(0);
+	}
 
 	public List<Airport> listAll() throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from airport", new Object[] {});

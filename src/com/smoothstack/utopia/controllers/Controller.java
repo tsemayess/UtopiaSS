@@ -74,7 +74,6 @@ public class Controller {
 		}
 	}
 
-
 	public String updateAirport() {
 		Connection c = null;
 		try {
@@ -253,7 +252,7 @@ public class Controller {
 		Connection c = null;
 		c = util.getConnection();
 		AirportDAO dao = new AirportDAO(c);
-		if (dao.listAll().contains(a)) {
+		if (dao.getById(a.getAirportCode()) != null) {
 			return true;
 		}
 		return false;
@@ -533,7 +532,6 @@ public class Controller {
 		}
 
 	}
-
 	
 	private boolean flightFull(Flight f, Connection c) throws ClassNotFoundException, SQLException {
 		FlightDAO dao = new FlightDAO(c);
@@ -587,7 +585,7 @@ public class Controller {
 			System.out.println("Enter Passenger Last Name");
 			p.setLastName(keyboard.nextLine());
 
-			System.out.println("Enter Passenger DOB");
+			System.out.println("Enter Passenger DOB In The Form YYYY-MM-DD");
 			p.setDob(keyboard.nextLine());
 
 			System.out.println("Enter Passenger Gender");
@@ -613,7 +611,7 @@ public class Controller {
 				bu.setBooking(pk);
 				bu.setUser(user);
 				bdao.add(bu);
-				
+				b.setBookingID(pk);
 				c.commit();
 
 			} catch (SQLException | ClassNotFoundException e) {
@@ -854,8 +852,8 @@ public class Controller {
 			PassengerDAO dao = new PassengerDAO(c);
 			Passenger p;
 
-			System.out.println("Enter ID of Passenger You Want To Update");
-			p = dao.getById(keyboard.nextInt());
+			System.out.println("Enter Booking ID of Passenger You Want To Update");
+			p = dao.getByBookingId(keyboard.nextInt());
 			keyboard.nextLine();
 
 			System.out.println("Enter New First Name: ");
@@ -888,8 +886,8 @@ public class Controller {
 			PassengerDAO dao = new PassengerDAO(c);
 			Passenger p;
 
-			System.out.println("Enter ID of Passenger You Want To Update");
-			p = dao.getById(keyboard.nextInt());
+			System.out.println("Enter Booking ID of Passenger You Want To Update");
+			p = dao.getByBookingId(keyboard.nextInt());
 			keyboard.nextLine();
 
 			System.out.println("Enter New Last Name: ");
@@ -922,8 +920,8 @@ public class Controller {
 			PassengerDAO dao = new PassengerDAO(c);
 			Passenger p;
 
-			System.out.println("Enter ID of Passenger You Want To Update");
-			p = dao.getById(keyboard.nextInt());
+			System.out.println("Enter Booking ID of Passenger You Want To Update");
+			p = dao.getByBookingId(keyboard.nextInt());
 			keyboard.nextLine();
 
 			System.out.println("Enter New Gender: ");
@@ -957,7 +955,7 @@ public class Controller {
 			Passenger p;
 
 			System.out.println("Enter ID of Passenger You Want To Update");
-			p = dao.getById(keyboard.nextInt());
+			p = dao.getByBookingId(keyboard.nextInt());
 			keyboard.nextLine();
 
 			System.out.println("Enter New Address: ");
@@ -990,8 +988,8 @@ public class Controller {
 			PassengerDAO dao = new PassengerDAO(c);
 			Passenger p;
 
-			System.out.println("Enter ID of Passenger You Want To Update");
-			p = dao.getById(keyboard.nextInt());
+			System.out.println("Enter Booking ID of Passenger You Want To Update");
+			p = dao.getByBookingId(keyboard.nextInt());
 			keyboard.nextLine();
 
 			System.out.println("Enter New Date Of Birth: ");

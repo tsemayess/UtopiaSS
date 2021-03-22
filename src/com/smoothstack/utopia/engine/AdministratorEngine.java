@@ -63,8 +63,6 @@ public class AdministratorEngine {
 	private void flightMenu() {
 		while (true) {
 			try {
-			
-
 				System.out.println(
 						"1) Add Flight \n2) Update Flight \n3) Read All Flights \n4) Return to Previous Screen");
 				System.out.println("\nEnter An Option Number");
@@ -77,7 +75,7 @@ public class AdministratorEngine {
 					admin.addFlight();
 					break;
 				case 2:
-					updateFlightMenu();
+					getFlight();
 					break;
 				case 3:
 					admin.readAllFlights();
@@ -94,31 +92,30 @@ public class AdministratorEngine {
 			}
 		}
 	}
-	
-	private void updateFlightMenu() {
+
+	private void updateFlightMenu(int id) {
 		while (true) {
 			try {
 
-				System.out.println(
-						"\n1) Update Flight Aircraft \n2) Update Flight Departure\n3) Update Reserved Seats"
-								+ "\n4) Update Price\n5) Return To Previous Screen");
+				System.out.println("\n1) Update Flight Aircraft \n2) Update Flight Departure\n3) Update Reserved Seats"
+						+ "\n4) Update Price\n5) Return To Previous Screen");
 				System.out.println("\nEnter An Option Number");
-
 				String s = keyboard.nextLine();
+
 				int c = Integer.parseInt(s);
 
 				switch (c) {
 				case 1:
-					admin.updateFlightPlane();
+					admin.updateFlightPlane(id);
 					break;
 				case 2:
-					admin.updateFlightDeparture();
+					admin.updateFlightDeparture(id);
 					break;
 				case 3:
-					admin.updateFlightSeats();
+					admin.updateFlightSeats(id);
 					break;
 				case 4:
-					admin.updateFlightPrice();
+					admin.updateFlightPrice(id);
 					break;
 				case 5:
 					return;
@@ -132,11 +129,32 @@ public class AdministratorEngine {
 			}
 		}
 	}
-	
+
+	private void getFlight() {
+		while (true) {
+			System.out.println("Enter ID of Flight You Want To Update Or Enter \"R\" To Return To Previous Screen.");
+			String s = keyboard.nextLine();
+			if (s.equalsIgnoreCase("R")) {
+				return;
+			}
+
+			int id = Integer.parseInt(s);
+
+			try {
+				if (admin.flightCheck(id)) {
+					updateFlightMenu(id);
+				}
+			} catch (ClassNotFoundException | SQLException e) {
+				System.out.println("Something Went Wrong. Please Try Again.");
+			} catch (IndexOutOfBoundsException e) {
+				System.out.println("No Flight Matching That ID Exists");
+			}
+		}
+	}
+
 	private void airportMenu() {
 		while (true) {
 			try {
-			
 
 				System.out.println(
 						"\n1) Add Airport \n2) Update Airport \n3) Read All Airports \n4) Return to Previous Screen");
@@ -167,36 +185,35 @@ public class AdministratorEngine {
 			}
 		}
 	}
-	
+
 	private void getUserIdRole(int role) {
 		while (true) {
 			try {
 
-				System.out.println("Enter the Id of The User Your Would Like Update or Enter \"R\" To Return To The Previous Screen." );
+				System.out.println(
+						"Enter the Id of The User Your Would Like Update or Enter \"R\" To Return To The Previous Screen.");
 				String s = keyboard.nextLine();
-				
-				if(s.equalsIgnoreCase("R")) {
+
+				if (s.equalsIgnoreCase("R")) {
 					return;
 				}
-				
+
 				int c = Integer.parseInt(s);
-				
+
 				try {
 					admin.userCheck(c, role);
-					
-					switch(role) {
-						case 1:
-							updateEmployeeMenu(c);
-							break;
-						case 3:
-							updateTravellerMenu(c);
-							break;
+
+					switch (role) {
+					case 1:
+						updateEmployeeMenu(c);
+						break;
+					case 3:
+						updateTravellerMenu(c);
+						break;
 					}
 				} catch (IndexOutOfBoundsException e) {
 					System.out.println("\nUser Could Not Be Found\n");
 				}
-				
-				
 
 			} catch (NumberFormatException e) {
 				System.out.println("That Is Not a Valid Option. Please Enter A Valid Option.\n");
@@ -365,22 +382,22 @@ public class AdministratorEngine {
 	private void login() {
 		while (true) {
 			try {
-			System.out.println("\nEnter Username. Or Enter \"R\" To Return To Previous Screen");
-			String username = keyboard.nextLine();
-			
-			if (username.equalsIgnoreCase("r")) {
-				return;
-			}
-			System.out.println("Enter Password");
-			String password = keyboard.nextLine();
-			user = admin.login(2, username, password);
-			
-			allActions();
+				System.out.println("\nEnter Username. Or Enter \"R\" To Return To Previous Screen");
+				String username = keyboard.nextLine();
+
+				if (username.equalsIgnoreCase("r")) {
+					return;
+				}
+				System.out.println("Enter Password");
+				String password = keyboard.nextLine();
+				user = admin.login(2, username, password);
+
+				allActions();
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("Username Or Password Is Incorrect. Try Again");
 			} catch (ClassNotFoundException | SQLException e) {
 				System.out.println("Something Went Wrong. Please Try Again");
-			} 
+			}
 		}
 	}
 }

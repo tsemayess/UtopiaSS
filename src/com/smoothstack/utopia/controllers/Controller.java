@@ -307,7 +307,7 @@ public class Controller {
 
 	}
 
-	public String updateFlightPrice() {
+	public String updateFlightPrice(int id) {
 		Connection c = null;
 
 		try {
@@ -315,9 +315,11 @@ public class Controller {
 			Flight f = new Flight();
 			FlightDAO dao = new FlightDAO(c);
 
-			System.out.println("Enter ID of Flight You Want To Update");
-			f.setiD(keyboard.nextInt());
-			keyboard.nextLine();
+//			System.out.println("Enter ID of Flight You Want To Update");
+//			f.setiD(keyboard.nextInt());
+//			keyboard.nextLine();
+			
+			f.setiD(id);
 
 			System.out.println("Enter New Seat Price: ");
 			f.setPrice(keyboard.nextFloat());
@@ -342,7 +344,7 @@ public class Controller {
 
 	}
 
-	public String updateFlightPlane() {
+	public String updateFlightPlane(int id) {
 		Connection c = null;
 
 		try {
@@ -350,9 +352,11 @@ public class Controller {
 			Flight f = new Flight();
 			FlightDAO dao = new FlightDAO(c);
 
-			System.out.println("Enter ID of Flight You Want To Update");
-			f.setiD(keyboard.nextInt());
-			keyboard.nextLine();
+//			System.out.println("Enter ID of Flight You Want To Update");
+//			f.setiD(keyboard.nextInt());
+//			keyboard.nextLine();
+			
+			f.setiD(id);
 
 			System.out.println("Enter New Aircraft ID: ");
 			f.setAirplane(keyboard.nextInt());
@@ -370,7 +374,7 @@ public class Controller {
 
 	}
 
-	public String updateFlightDeparture() {
+	public String updateFlightDeparture(int id) {
 		Connection c = null;
 
 		try {
@@ -378,9 +382,10 @@ public class Controller {
 			Flight f = new Flight();
 			FlightDAO dao = new FlightDAO(c);
 
-			System.out.println("Enter ID of Flight You Want To Update");
-			f.setiD(keyboard.nextInt());
-			keyboard.nextLine();
+//			System.out.println("Enter ID of Flight You Want To Update");
+//			f.setiD(keyboard.nextInt());
+//			keyboard.nextLine();
+			f.setiD(id);
 
 			System.out.println("Enter New Departure Date and Time: ");
 			f.setDeparture(keyboard.nextLine());
@@ -404,7 +409,7 @@ public class Controller {
 
 	}
 
-	public String updateFlightSeats() {
+	public String updateFlightSeats(int id) {
 		Connection c = null;
 
 		try {
@@ -414,9 +419,11 @@ public class Controller {
 			AirplaneDAO airdao = new AirplaneDAO(c);
 			AirplaneTypeDAO typedao = new AirplaneTypeDAO(c);
 
-			System.out.println("Enter ID of Flight You Want To Update");
-			f.setiD(keyboard.nextInt());
-			keyboard.nextLine();
+//			System.out.println("Enter ID of Flight You Want To Update");
+//			f.setiD(keyboard.nextInt());
+//			keyboard.nextLine();
+			
+			f.setiD(id);
 
 			System.out.println("Enter Number of Seats to Reserve: ");
 			int add = keyboard.nextInt();
@@ -461,7 +468,6 @@ public class Controller {
 		try {
 			c = util.getConnection();
 			FlightDAO dao = new FlightDAO(c);
-			System.out.println(dao.readAll());
 			System.out.println("All Flights");
 			System.out.println(dao.readAll());
 			return dao.readAll();
@@ -480,6 +486,55 @@ public class Controller {
 
 	}
 
+	public String readFlight(int id) {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			FlightDAO dao = new FlightDAO(c);
+			
+			System.out.println(dao.read(dao.getById(id)));
+			return (dao.read(dao.getById(id)));
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Flights");
+			return "Something Went Wrong. Could Not List All Flights";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+	
+	public String readAllFlightsShort() {
+		Connection c = null;
+
+		try {
+			c = util.getConnection();
+			FlightDAO dao = new FlightDAO(c);
+			System.out.println("\nAll Flights\n");
+			System.out.println(dao.readAllShort());
+			return dao.readAllShort();
+
+		} catch (SQLException | ClassNotFoundException e) {
+			System.out.println("Something Went Wrong. Could Not List All Flights");
+			return "Something Went Wrong. Could Not List All Flights";
+		} finally {
+			if (c != null) {
+				try {
+					c.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+	}
+
+	
 	private boolean flightFull(Flight f, Connection c) throws ClassNotFoundException, SQLException {
 		FlightDAO dao = new FlightDAO(c);
 		AirplaneDAO airdao = new AirplaneDAO(c);
@@ -493,6 +548,14 @@ public class Controller {
 		return false;
 	}
 
+	public boolean flightCheck(int id) throws ClassNotFoundException, SQLException {
+		Connection c = null;
+		c = util.getConnection();
+		FlightDAO fdao = new FlightDAO(c);
+		fdao.getById(id);
+		return true;
+	}
+	
 	public String addBooking(int user) {
 		Connection c = null;
 
@@ -1249,7 +1312,6 @@ public class Controller {
 		}
 		
 	}
-
 
 	public boolean userCheck(int id, int role) {
 		Connection c = null;

@@ -61,6 +61,15 @@ public class FlightDAO extends DAO<Flight> {
 		return s;
 	}
 	
+	public String readAllShort() throws SQLException, ClassNotFoundException {
+		List<Flight> flights = listAll();
+		String s = "";
+		for (int i = 0; i < flights.size(); i++) {
+			s += shortRead(flights.get(i)) + "\n\n";
+		}
+		return s;
+	}
+	
 	public List<Flight> listAll() throws ClassNotFoundException, SQLException {
 		return super.listAll("select * from flight", new Object[] {});
 	}
@@ -85,7 +94,7 @@ public class FlightDAO extends DAO<Flight> {
 	public String shortRead(Flight f) throws ClassNotFoundException, SQLException {
 		RouteDAO rDAO = new RouteDAO(c);
 		String result = rDAO.read(rDAO.getById((f.getRoute())));
-		return "Flight " + f.getiD() + "\n" + result.substring(result.lastIndexOf("\n") + 2) + "\nDeparture: "
+		return "Flight " + f.getiD() + "\n" + result.substring(result.lastIndexOf("\n") + 1) + "\nDeparture: "
 				+ f.getDeparture();
 
 	}

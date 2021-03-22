@@ -1,4 +1,4 @@
-package com.smoothstack.utopia.daos.tests;
+package com.smoothstack.utopia.daos;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -6,9 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.smoothstack.utopia.daos.AirplaneDAO;
-import com.smoothstack.utopia.daos.DAO;
-import com.smoothstack.utopia.daos.RouteDAO;
 import com.smoothstack.utopia.domains.Airplane;
 import com.smoothstack.utopia.domains.BookingPayment;
 import com.smoothstack.utopia.domains.Flight;
@@ -22,7 +19,7 @@ public class BookingPaymentDAO extends DAO<BookingPayment> {
 	}
 
 	public void add(BookingPayment b) throws ClassNotFoundException, SQLException {
-		save("insert into booking_id values (?, ?, ?)",
+		save("insert into booking_payment values (?, ?, ?)",
 				new Object[] {b.getBooking(), b.getPayment(), b.getRefunded()});
 	}
 	

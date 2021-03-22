@@ -10,11 +10,11 @@ import com.smoothstack.utopia.daos.AirplaneDAO;
 import com.smoothstack.utopia.daos.AirplaneTypeDAO;
 import com.smoothstack.utopia.daos.AirportDAO;
 import com.smoothstack.utopia.daos.BookingDAO;
+import com.smoothstack.utopia.daos.BookingPaymentDAO;
 import com.smoothstack.utopia.daos.BookingUserDAO;
 import com.smoothstack.utopia.daos.FlightDAO;
 import com.smoothstack.utopia.daos.PassengerDAO;
 import com.smoothstack.utopia.daos.UserDAO;
-import com.smoothstack.utopia.daos.tests.BookingPaymentDAO;
 import com.smoothstack.utopia.domains.Airport;
 import com.smoothstack.utopia.domains.Booking;
 import com.smoothstack.utopia.domains.BookingPayment;
@@ -600,6 +600,7 @@ public class Controller {
 			
 			BookingPayment pay = new BookingPayment();
 			BookingPaymentDAO paydao = new BookingPaymentDAO(c);
+			
 			System.out.println("Enter Card Number You Are Paying With");
 			pay.setPayment(keyboard.nextLine());
 			pay.setRefunded(1);

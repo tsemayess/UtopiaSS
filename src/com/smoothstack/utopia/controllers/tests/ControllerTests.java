@@ -96,10 +96,10 @@ public class ControllerTests {
 //	public void readAllFlights() {
 //			admin.readAllFlights();
 //	}
-//	@Test
-//	public void addBooking() {
-//			admin.addBooking();
-//	}
+	@Test
+	public void addBooking() {
+			admin.addBooking(3);
+	}
 //	
 //	@Test
 //	public void cancelBooking() {
@@ -165,8 +165,8 @@ public class ControllerTests {
 //	public void readTraveller() {
 //		admin.readAllTravellers();
 //	}
-	@Test
-	public void readBookingsByUser() {
-		admin.readBookingsByUser(2);
-	}
+//	@Test
+//	public void readBookingsByUser() {
+//		admin.readBookingsByUser(2);
+//	}
 }

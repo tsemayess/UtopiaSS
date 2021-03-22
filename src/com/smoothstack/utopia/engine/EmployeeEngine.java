@@ -36,7 +36,7 @@ public class EmployeeEngine {
 					admin.readFlight(id);
 					break;
 				case 2:
-					admin.updateFlightDeparture(id);
+					admin.updateFlightTimes(id);
 					break;
 				case 3:
 					admin.updateFlightSeats(id);

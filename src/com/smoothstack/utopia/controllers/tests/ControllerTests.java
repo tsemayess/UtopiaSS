@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import com.smoothstack.utopia.controllers.Controller;
 import com.smoothstack.utopia.domains.Airport;
 
-public class AdministratorTests {
+public class ControllerTests {
 	Controller admin = new Controller();
 
 //	@Test

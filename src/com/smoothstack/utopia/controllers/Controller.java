@@ -14,8 +14,10 @@ import com.smoothstack.utopia.daos.BookingUserDAO;
 import com.smoothstack.utopia.daos.FlightDAO;
 import com.smoothstack.utopia.daos.PassengerDAO;
 import com.smoothstack.utopia.daos.UserDAO;
+import com.smoothstack.utopia.daos.tests.BookingPaymentDAO;
 import com.smoothstack.utopia.domains.Airport;
 import com.smoothstack.utopia.domains.Booking;
+import com.smoothstack.utopia.domains.BookingPayment;
 import com.smoothstack.utopia.domains.BookingUser;
 import com.smoothstack.utopia.domains.Flight;
 import com.smoothstack.utopia.domains.Passenger;
@@ -373,7 +375,7 @@ public class Controller {
 
 	}
 
-	public String updateFlightDeparture(int id) {
+	public String updateFlightTimes(int id) {
 		Connection c = null;
 
 		try {
@@ -381,22 +383,24 @@ public class Controller {
 			Flight f = new Flight();
 			FlightDAO dao = new FlightDAO(c);
 
-//			System.out.println("Enter ID of Flight You Want To Update");
-//			f.setiD(keyboard.nextInt());
-//			keyboard.nextLine();
 			f.setiD(id);
 
-			System.out.println("Enter New Departure Date and Time: ");
+			System.out.println("Enter New Departure Date and Time In The Form YYYY-MM-DD HH:MM:00 ");
 			f.setDeparture(keyboard.nextLine());
+			
+			System.out.println("Enter Arrival Date and Time In The Form YYYY-MM-DD HH:MM:00 ");
+			f.setArrival(keyboard.nextLine());
+
+			dao.updateArrival(f);
 
 			dao.updateDeparture(f);
 			c.commit();
-			System.out.println("\n" + dao.read(f) + "\n\nFlight Date and Time Successfully");
+			System.out.println("\n" + dao.read(f) + "\n\nFlight Departure Date and Time Successfully");
 			return dao.read(f);
 
 		} catch (SQLException | ClassNotFoundException e) {
-			System.out.println("Something Went Wrong. Flight Date And Time Could Not Be Updated");
-			return "Flight Date And Time Could Not Be Updated";
+			System.out.println("Something Went Wrong. Flight Departure Date And Time Could Not Be Updated");
+			return "Flight Departure Date And Time Could Not Be Updated";
 		} finally {
 			if (c != null) {
 				try {
@@ -593,6 +597,12 @@ public class Controller {
 
 			System.out.println("Enter Passenger Address");
 			p.setAddress(keyboard.nextLine());
+			
+			BookingPayment pay = new BookingPayment();
+			BookingPaymentDAO paydao = new BookingPaymentDAO(c);
+			System.out.println("Enter Card Number You Are Paying With");
+			pay.setPayment(keyboard.nextLine());
+			pay.setRefunded(1);
 
 			int pk = dao.add(b);
 			c.commit();
@@ -612,6 +622,9 @@ public class Controller {
 				bu.setUser(user);
 				bdao.add(bu);
 				b.setBookingID(pk);
+				
+				pay.setBooking(pk);
+				paydao.add(pay);
 				c.commit();
 
 			} catch (SQLException | ClassNotFoundException e) {
@@ -688,6 +701,12 @@ public class Controller {
 					f.setSeats(f.getSeats() - 1);
 					fdao.updateSeats(f);
 
+					BookingPayment pay = new BookingPayment();
+					BookingPaymentDAO paydao = new BookingPaymentDAO(c);
+					pay.setBooking(b.getBookingID());
+					pay.setRefunded(2);
+					paydao.updateRefunded(pay);
+					
 					q = false;
 				} else if (a.equalsIgnoreCase("n")) {
 					return "no";
@@ -764,6 +783,12 @@ public class Controller {
 					dao.updateIsActive(b);
 					f.setSeats(f.getSeats() + 1);
 					fdao.updateSeats(f);
+					
+					BookingPayment pay = new BookingPayment();
+					BookingPaymentDAO paydao = new BookingPaymentDAO(c);
+					pay.setBooking(b.getBookingID());
+					pay.setRefunded(2);
+					paydao.updateRefunded(pay);
 					q = false;
 				} else if (a.equalsIgnoreCase("n")) {
 					return "no";

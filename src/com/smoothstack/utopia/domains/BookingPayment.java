@@ -1,43 +1,52 @@
 package com.smoothstack.utopia.domains;
 
 public class BookingPayment {
-	private Booking booking;
-	private Integer stripeID, refunded;
+	private Integer booking, refunded;
+	private StringBuffer payment;
 	/**
 	 * @return the booking
 	 */
-	public Booking getBooking() {
+	public Integer getBooking() {
 		return booking;
 	}
 	/**
 	 * @param booking the booking to set
 	 */
-	public void setBooking(Booking booking) {
+	public void setBooking(Integer booking) {
 		this.booking = booking;
-	}
-	/**
-	 * @return the stripeID
-	 */
-	public int getStripeID() {
-		return stripeID;
-	}
-	/**
-	 * @param stripeID the stripeID to set
-	 */
-	public void setStripeID(int stripeID) {
-		this.stripeID = stripeID;
 	}
 	/**
 	 * @return the refunded
 	 */
-	public int getRefunded() {
+	public Integer getRefunded() {
 		return refunded;
 	}
 	/**
 	 * @param refunded the refunded to set
 	 */
-	public void setRefunded(int refunded) {
+	public void setRefunded(Integer refunded) {
 		this.refunded = refunded;
+	}
+	
+	public String refundedString() {
+		if (refunded == 1) {
+			return "NO";
+		} else if (refunded == 2){
+			return "YES";
+		}
+		return "ERROR";
+	}
+	/**
+	 * @return the payment
+	 */
+	public String getPayment() {
+		return payment.toString();
+	}
+	/**
+	 * @param payment the payment to set
+	 */
+	public void setPayment(String payment) {
+		this.payment = new StringBuffer(payment);
 	}
 	@Override
 	public int hashCode() {
@@ -62,6 +71,7 @@ public class BookingPayment {
 			return false;
 		return true;
 	}
+
 	
 	
 }

@@ -9,6 +9,7 @@ public class AdministratorEngine {
 
 	private Scanner keyboard = new Scanner(System.in);
 	private Controller admin = new Controller();
+	
 	private User user = null;
 
 	public void run() {
@@ -17,13 +18,11 @@ public class AdministratorEngine {
 	}
 
 	public void allActions() {
-		boolean q = true;
-
-		while (q) {
+		while (true) {
 			try {
 				System.out.println("\n1) Add/Update/Read Flights \n3) Add/Update/Cancel/Read Bookings And/Or Passengers"
 						+ "\n4) Add/Update/Read Airports \n5) Add/Update/Delete/Read Travellers "
-						+ "\n6) Add/Update/Delete/Read Employees \n7) Override Trip Cancellation For A Booking\n");
+						+ "\n6) Add/Update/Delete/Read Employees \n7) Override Trip Cancellation For A Booking\n8) Log Out and Return To Previous Screen\n");
 				System.out.println("Enter An Option Number");
 				String s = keyboard.nextLine();
 				int a = Integer.parseInt(s);
@@ -47,6 +46,8 @@ public class AdministratorEngine {
 				case 7:
 					overrideCancellation();
 					break;
+				case 8:
+					return;
 				default:
 					System.out.println("That Is Not a Valid Option. Please Enter A Valid Option.\n");
 					break;
@@ -97,7 +98,7 @@ public class AdministratorEngine {
 		while (true) {
 			try {
 
-				System.out.println("\n1) Update Flight Aircraft \n2) Update Flight Departure\n3) Update Reserved Seats"
+				System.out.println("\n1) Update Flight Aircraft \n2) Update Flight Departure and Arrival \n3) Update Reserved Seats"
 						+ "\n4) Update Price\n5) Return To Previous Screen");
 				System.out.println("\nEnter An Option Number");
 				String s = keyboard.nextLine();
@@ -109,7 +110,7 @@ public class AdministratorEngine {
 					admin.updateFlightPlane(id);
 					break;
 				case 2:
-					admin.updateFlightDeparture(id);
+					admin.updateFlightTimes(id);
 					break;
 				case 3:
 					admin.updateFlightSeats(id);

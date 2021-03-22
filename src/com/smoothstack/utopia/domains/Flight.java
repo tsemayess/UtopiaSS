@@ -3,7 +3,19 @@ package com.smoothstack.utopia.domains;
 public class Flight {
 	private Integer iD, route,airplane, seats;
 	private Float price;
-	private StringBuffer departure;
+	private StringBuffer departure, arrival;
+	/**
+	 * @return the arrival
+	 */
+	public String getArrival() {
+		return arrival.toString();
+	}
+	/**
+	 * @param arrival the arrival to set
+	 */
+	public void setArrival(String arrival) {
+		this.arrival = new StringBuffer(arrival);
+	}
 	/**
 	 * @return the iD
 	 */

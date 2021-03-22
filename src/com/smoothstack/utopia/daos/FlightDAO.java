@@ -35,6 +35,10 @@ public class FlightDAO extends DAO<Flight> {
 	public void updateDeparture(Flight f) throws ClassNotFoundException, SQLException {
 		save("update flight set departure_time = ? where id = ?", new Object[] { f.getDeparture(), f.getiD() });
 	}
+	
+	public void updateArrival(Flight f) throws ClassNotFoundException, SQLException {
+		save("update flight set arrival_time = ? where id = ?", new Object[] { f.getArrival(), f.getiD() });
+	}
 
 	public void updateSeats(Flight f) throws ClassNotFoundException, SQLException {
 		save("update flight set reserved_seats = ? where id = ?", new Object[] { f.getSeats(), f.getiD() });
@@ -84,6 +88,7 @@ public class FlightDAO extends DAO<Flight> {
 			a.setRoute(resultSet.getInt("route_id"));
 			a.setAirplane(resultSet.getInt("airplane_id"));
 			a.setDeparture(resultSet.getString("departure_time"));
+			a.setArrival(resultSet.getString("arrival_time"));
 			a.setSeats(resultSet.getInt("reserved_seats"));
 			a.setPrice(resultSet.getFloat("seat_price"));
 			flights.add(a);
@@ -101,7 +106,7 @@ public class FlightDAO extends DAO<Flight> {
 
 	public String read(Flight f) throws SQLException {
 		// TODO Auto-generated method stub
-		return super.read("select * from flight where id = ?", new Object[] { f.getiD() });
+		return super.read("select * from flight where id = ?", new Object[] {f.getiD() });
 	}
 
 	@Override
@@ -120,7 +125,7 @@ public class FlightDAO extends DAO<Flight> {
 			AirplaneDAO airplaneDAO = new AirplaneDAO(c);
 			result += airplaneDAO.read(a) + "\n";
 
-			result += "Departure: " + resultSet.getString("departure_time") + "\nReserved Seats: "
+			result += "Departure: " + resultSet.getString("departure_time") + "\nArrival: " + resultSet.getString("arrival_time") + "\nReserved Seats: "
 					+ resultSet.getInt("reserved_seats") + "\nPrice: $" + resultSet.getFloat("seat_price");
 
 		}
